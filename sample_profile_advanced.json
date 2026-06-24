@@ -1,0 +1,212 @@
+{
+  "profile_version": "2.0",
+  "personal_information": {
+    "name": "Aisha Khan",
+    "email": "aisha.khan@example.com",
+    "phone": "+92 300 0000000",
+    "location": "Karachi, Pakistan",
+    "github": "https://github.com/aishakhan",
+    "linkedin": "https://www.linkedin.com/in/aishakhan"
+  },
+  "education": [
+    {
+      "degree": "BS Software Engineering",
+      "university": "Example University",
+      "campus": "Karachi Campus",
+      "graduation_year": 2026,
+      "cgpa": 3.52,
+      "relevant_coursework": [
+        "Data Structures and Algorithms",
+        "Database Systems",
+        "Software Engineering",
+        "Operating Systems",
+        "Web Engineering",
+        "Cloud Computing"
+      ]
+    }
+  ],
+  "skills": {
+    "languages": [
+      "Python",
+      "JavaScript",
+      "TypeScript",
+      "SQL",
+      "C++"
+    ],
+    "frontend": [
+      "React",
+      "Next.js",
+      "HTML",
+      "CSS",
+      "Tailwind CSS",
+      "Responsive UI"
+    ],
+    "backend": [
+      "Node.js",
+      "Express.js",
+      "FastAPI",
+      "REST APIs"
+    ],
+    "databases": [
+      "PostgreSQL",
+      "SQLite",
+      "MongoDB"
+    ],
+    "cloud": [
+      "AWS basics",
+      "Vercel",
+      "Render"
+    ],
+    "devops": [
+      "Git",
+      "GitHub Actions",
+      "Docker basics",
+      "Linux"
+    ],
+    "blockchain": [
+      "Solidity",
+      "IPFS",
+      "Smart contracts"
+    ],
+    "ai_tools": [
+      "OpenAI API",
+      "Prompt engineering",
+      "Streamlit AI apps"
+    ],
+    "testing": [
+      "Pytest",
+      "Jest",
+      "Unit testing"
+    ],
+    "tools": [
+      "GitHub",
+      "Postman",
+      "VS Code",
+      "Figma",
+      "Jira"
+    ]
+  },
+  "experience": [
+    {
+      "title": "Software Engineering Intern",
+      "company": "ExampleTech Labs",
+      "start_date": "2025-06",
+      "end_date": "2025-08",
+      "location": "Karachi, Pakistan",
+      "achievements": [
+        "Built REST API endpoints for an internal reporting dashboard.",
+        "Added validation and error handling to improve API reliability.",
+        "Collaborated with two engineers using GitHub pull requests and code reviews."
+      ],
+      "technologies_used": [
+        "Python",
+        "FastAPI",
+        "PostgreSQL",
+        "Docker"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Job Application Co-Pilot",
+      "type": "AI productivity tool",
+      "description": "A local Streamlit app that tailors CV bullets, cover letters, and application answers from a structured candidate profile.",
+      "technologies": [
+        "Python",
+        "Streamlit",
+        "OpenAI API",
+        "SQLite",
+        "LaTeX"
+      ],
+      "highlights": [
+        "Designed strict prompts that require generated CV bullets to cite profile facts.",
+        "Built a SQLite tracker for application status, fit score, ATS match, and export paths.",
+        "Generated LaTeX CV and cover letter files for human review."
+      ],
+      "github_link": "https://github.com/aishakhan/job-application-copilot",
+      "live_link": null,
+      "complexity_level": "Intermediate"
+    },
+    {
+      "name": "Campus Marketplace",
+      "type": "Full-stack web app",
+      "description": "A marketplace where students can list, search, and message about campus items.",
+      "technologies": [
+        "React",
+        "Node.js",
+        "Express.js",
+        "MongoDB"
+      ],
+      "highlights": [
+        "Implemented listing, authentication, and saved-item APIs.",
+        "Built reusable React components with form validation.",
+        "Designed search and filter flows for common student use cases."
+      ],
+      "github_link": "https://github.com/aishakhan/campus-marketplace",
+      "live_link": null,
+      "complexity_level": "Intermediate"
+    }
+  ],
+  "certifications": [
+    {
+      "name": "AWS Cloud Practitioner Essentials",
+      "issuer": "AWS Skill Builder",
+      "year": 2025,
+      "status": "Completed"
+    }
+  ],
+  "career_preferences": {
+    "preferred_roles": [
+      "Graduate Software Engineer",
+      "Junior Backend Developer",
+      "Junior Full Stack Developer"
+    ],
+    "preferred_locations": [
+      "Karachi",
+      "Lahore",
+      "Remote"
+    ],
+    "remote_preference": "Hybrid or remote preferred",
+    "relocation_willingness": "Open within Pakistan",
+    "industries_of_interest": [
+      "SaaS",
+      "Fintech",
+      "Developer tools",
+      "AI productivity"
+    ]
+  },
+  "career_goals": {
+    "short_term_goals": [
+      "Secure a graduate software engineering role.",
+      "Build stronger backend, testing, and cloud deployment experience."
+    ],
+    "long_term_goals": [
+      "Become a backend or full-stack engineer who designs reliable production systems.",
+      "Grow into technical leadership while continuing to build user-focused products."
+    ]
+  },
+  "additional_information": {
+    "summary": "Fresh software engineering graduate focused on backend systems, full-stack web applications, and AI-assisted productivity tools.",
+    "portfolio": "https://aishakhan.dev",
+    "work_authorization": null,
+    "passport_status": null,
+    "availability": "Available after graduation",
+    "salary_expectations": null,
+    "awards": [],
+    "truthfulness_constraints": [
+      "Do not mention GPA unless the profile contains CGPA.",
+      "Do not claim work authorization unless the candidate confirms it.",
+      "Do not add certifications that are not listed."
+    ],
+    "unmapped_legacy_fields": {}
+  },
+  "profile_enrichment": {
+    "inferred_skills_from_projects": [],
+    "inferred_technologies_from_experience": [],
+    "suggested_missing_keywords": [],
+    "ats_improvements": [],
+    "factual_accuracy_notes": [
+      "Generated enrichment is advisory. Do not present suggestions as facts unless the candidate confirms them."
+    ]
+  }
+}

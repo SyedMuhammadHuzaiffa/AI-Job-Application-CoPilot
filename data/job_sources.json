@@ -1,0 +1,146 @@
+{
+  "enabled_connectors": [
+    "RemoteOK",
+    "Greenhouse",
+    "Lever",
+    "Company Career Page"
+  ],
+  "greenhouse_boards": [],
+  "lever_companies": [],
+  "company_career_pages": [
+    {
+      "company": "Systems Limited",
+      "country": "Pakistan",
+      "url": "https://www.systemsltd.com/careers/"
+    },
+    {
+      "company": "Arbisoft",
+      "country": "Pakistan",
+      "url": "https://arbisoft.com/careers/"
+    },
+    {
+      "company": "Tkxel",
+      "country": "Pakistan",
+      "url": "https://tkxel.com/careers/"
+    },
+    {
+      "company": "10Pearls",
+      "country": "Pakistan",
+      "url": "https://10pearls.com/careers/"
+    },
+    {
+      "company": "Contour Software",
+      "country": "Pakistan",
+      "url": "https://contour-software.com/careers/"
+    },
+    {
+      "company": "Careem",
+      "country": "UAE",
+      "url": "https://www.careem.com/careers/"
+    },
+    {
+      "company": "Motive",
+      "country": "Pakistan",
+      "url": "https://gomotive.com/company/careers/"
+    },
+    {
+      "company": "Dubizzle",
+      "country": "UAE",
+      "url": "https://www.dubizzle.com/careers/"
+    },
+    {
+      "company": "Noon",
+      "country": "UAE",
+      "url": "https://www.noon.com/careers/"
+    },
+    {
+      "company": "Talabat",
+      "country": "UAE",
+      "url": "https://www.talabat.com/careers"
+    },
+    {
+      "company": "Emirates",
+      "country": "UAE",
+      "url": "https://www.emiratesgroupcareers.com/"
+    },
+    {
+      "company": "Cobblestone Energy",
+      "country": "UAE",
+      "url": "https://www.cobblestoneenergy.com/careers/"
+    }
+  ],
+  "platform_search_templates": [
+    {
+      "source": "Wellfound",
+      "url": "https://wellfound.com/jobs?q={query}"
+    },
+    {
+      "source": "Y Combinator Jobs",
+      "url": "https://www.ycombinator.com/jobs?query={query}"
+    },
+    {
+      "source": "Welcome to the Jungle",
+      "url": "https://www.welcometothejungle.com/en/jobs?query={query}"
+    },
+    {
+      "source": "LinkedIn Jobs",
+      "url": "https://www.linkedin.com/jobs/search/?keywords={query}&location={location}"
+    },
+    {
+      "source": "Indeed",
+      "url": "https://www.indeed.com/jobs?q={query}&l={location}"
+    },
+    {
+      "source": "Glassdoor",
+      "url": "https://www.glassdoor.com/Job/jobs.htm?sc.keyword={query}"
+    },
+    {
+      "source": "Rozee.pk",
+      "url": "https://www.rozee.pk/job/jsearch/q/{query}"
+    },
+    {
+      "source": "Mustakbil",
+      "url": "https://www.mustakbil.com/jobs/search?keywords={query}"
+    },
+    {
+      "source": "BrightSpyre",
+      "url": "https://www.brightspyre.com/jobs?query={query}"
+    },
+    {
+      "source": "CareerOkay",
+      "url": "https://careerokay.com/jobs/?q={query}"
+    },
+    {
+      "source": "Jobee",
+      "url": "https://www.jobee.pk/jobs?keyword={query}"
+    },
+    {
+      "source": "HiringCafe",
+      "url": "https://hiring.cafe/?search={query}"
+    },
+    {
+      "source": "Bayt",
+      "url": "https://www.bayt.com/en/uae/jobs/{query}-jobs/"
+    },
+    {
+      "source": "GulfTalent",
+      "url": "https://www.gulftalent.com/jobs/search?pos_ref={query}"
+    },
+    {
+      "source": "Naukrigulf",
+      "url": "https://www.naukrigulf.com/{query}-jobs"
+    },
+    {
+      "source": "Dubizzle Jobs",
+      "url": "https://dubai.dubizzle.com/jobs/?keywords={query}"
+    },
+    {
+      "source": "Indeed UAE",
+      "url": "https://ae.indeed.com/jobs?q={query}&l={location}"
+    },
+    {
+      "source": "LinkedIn UAE",
+      "url": "https://www.linkedin.com/jobs/search/?keywords={query}&location=United%20Arab%20Emirates"
+    }
+  ]
+}

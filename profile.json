@@ -1,0 +1,194 @@
+{
+  "profile_version": "2.0",
+  "personal_information": {
+    "name": "Huzaifa Syed Muhammad",
+    "email": null,
+    "phone": null,
+    "location": null,
+    "github": null,
+    "linkedin": null
+  },
+  "education": [
+    {
+      "degree": "BS Software Engineering",
+      "university": "FAST NUCES Karachi",
+      "campus": null,
+      "graduation_year": 2026,
+      "cgpa": null,
+      "relevant_coursework": []
+    }
+  ],
+  "skills": {
+    "languages": [],
+    "frontend": [
+      "UI/UX",
+      "Responsive UI"
+    ],
+    "backend": [
+      "Node.js",
+      "Express.js",
+      "REST APIs"
+    ],
+    "databases": [],
+    "cloud": [],
+    "devops": [
+      "Hosting"
+    ],
+    "blockchain": [
+      "Solidity",
+      "IPFS",
+      "Merkle Trees"
+    ],
+    "ai_tools": [],
+    "testing": [],
+    "tools": [
+      "SEO"
+    ]
+  },
+  "experience": [
+    {
+      "title": "Freelance Web Developer",
+      "company": null,
+      "start_date": "2024-01",
+      "end_date": "Present",
+      "location": null,
+      "achievements": [
+        "Built responsive websites",
+        "Managed hosting and domains",
+        "Improved UI/UX and SEO"
+      ],
+      "technologies_used": []
+    }
+  ],
+  "projects": [
+    {
+      "name": "Blockchain Certificate Verification System",
+      "type": null,
+      "description": null,
+      "technologies": [
+        "Solidity",
+        "Node.js",
+        "Express.js",
+        "IPFS",
+        "REST APIs",
+        "Merkle Trees"
+      ],
+      "highlights": [
+        "Bulk certificate issuance using Merkle Trees",
+        "Certificate verification and revocation",
+        "Tamper-resistant blockchain storage"
+      ],
+      "github_link": null,
+      "live_link": null,
+      "complexity_level": null
+    }
+  ],
+  "certifications": [],
+  "career_preferences": {
+    "preferred_roles": [
+      "Graduate Software Engineer",
+      "Backend Engineer",
+      "DevOps Engineer",
+      "AI Engineer"
+    ],
+    "preferred_locations": [],
+    "remote_preference": null,
+    "relocation_willingness": null,
+    "industries_of_interest": []
+  },
+  "career_goals": {
+    "short_term_goals": [
+      "Graduate Software Engineer",
+      "Backend Engineer",
+      "DevOps Engineer",
+      "AI Engineer"
+    ],
+    "long_term_goals": []
+  },
+  "additional_information": {
+    "summary": null,
+    "portfolio": null,
+    "work_authorization": null,
+    "passport_status": null,
+    "availability": null,
+    "salary_expectations": null,
+    "awards": [],
+    "truthfulness_constraints": [],
+    "unmapped_legacy_fields": {}
+  },
+  "profile_enrichment": {
+    "inferred_skills_from_projects": [
+      {
+        "skill": "Solidity",
+        "category": "blockchain",
+        "source": "Project: Blockchain Certificate Verification System"
+      },
+      {
+        "skill": "Node.js",
+        "category": "backend",
+        "source": "Project: Blockchain Certificate Verification System"
+      },
+      {
+        "skill": "Express.js",
+        "category": "backend",
+        "source": "Project: Blockchain Certificate Verification System"
+      },
+      {
+        "skill": "IPFS",
+        "category": "blockchain",
+        "source": "Project: Blockchain Certificate Verification System"
+      },
+      {
+        "skill": "REST APIs",
+        "category": "backend",
+        "source": "Project: Blockchain Certificate Verification System"
+      },
+      {
+        "skill": "Merkle Trees",
+        "category": "blockchain",
+        "source": "Project: Blockchain Certificate Verification System"
+      }
+    ],
+    "inferred_technologies_from_experience": [
+      {
+        "technology": "Hosting",
+        "category": "devops",
+        "source": "Experience: Freelance Web Developer"
+      },
+      {
+        "technology": "UI/UX",
+        "category": "frontend",
+        "source": "Experience: Freelance Web Developer"
+      },
+      {
+        "technology": "Responsive UI",
+        "category": "frontend",
+        "source": "Experience: Freelance Web Developer"
+      },
+      {
+        "technology": "SEO",
+        "category": "tools",
+        "source": "Experience: Freelance Web Developer"
+      }
+    ],
+    "suggested_missing_keywords": [
+      "Backend API development, if supported by project details.",
+      "REST API design, if you can explain endpoints you built.",
+      "Smart contracts, only if your Solidity work included contracts.",
+      "Decentralized storage, if you can describe your IPFS usage."
+    ],
+    "ats_improvements": [
+      "Add a GitHub URL so recruiters can inspect projects.",
+      "Add a LinkedIn URL for outreach and recruiter screening.",
+      "Add a one-sentence description for project: Blockchain Certificate Verification System.",
+      "Add a complexity level for project: Blockchain Certificate Verification System.",
+      "Add testing tools or practices only if you have actually used them.",
+      "Add long-term career goals to improve cover letter and interview prep personalization."
+    ],
+    "factual_accuracy_notes": [
+      "Generated enrichment is advisory. Do not present suggestions as facts unless the candidate confirms them.",
+      "Do not add GPA, certifications, work authorization, or employment history unless the candidate provides them.",
+      "Treat inferred skills as review suggestions derived from listed projects or experience."
+    ]
+  }
+}

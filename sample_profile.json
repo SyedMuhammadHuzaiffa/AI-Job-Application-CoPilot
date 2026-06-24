@@ -1,0 +1,136 @@
+{
+  "basics": {
+    "name": "Aisha Khan",
+    "email": "aisha.khan@example.com",
+    "phone": "+92 300 0000000",
+    "location": "Karachi, Pakistan",
+    "linkedin": "https://www.linkedin.com/in/aishakhan",
+    "github": "https://github.com/aishakhan",
+    "portfolio": "https://aishakhan.dev",
+    "work_authorization": "Not specified",
+    "passport_status": "Not specified"
+  },
+  "summary": "Fresh software engineering graduate focused on building reliable web applications, APIs, and data-driven tools. Comfortable with Python, JavaScript, SQL, Git, and collaborative project work.",
+  "education": [
+    {
+      "degree": "BS Software Engineering",
+      "school": "Example University",
+      "location": "Karachi, Pakistan",
+      "dates": "2021-2025",
+      "gpa": null,
+      "details": [
+        "Completed coursework in data structures, algorithms, databases, software engineering, operating systems, and web development.",
+        "Final year project: AI-assisted job application tracker for students and fresh graduates."
+      ]
+    }
+  ],
+  "skills": {
+    "languages": [
+      "Python",
+      "JavaScript",
+      "TypeScript",
+      "SQL",
+      "C++"
+    ],
+    "frameworks": [
+      "React",
+      "Node.js",
+      "Express",
+      "FastAPI",
+      "Streamlit"
+    ],
+    "databases": [
+      "PostgreSQL",
+      "SQLite",
+      "MongoDB"
+    ],
+    "tools": [
+      "Git",
+      "GitHub",
+      "Docker",
+      "Linux",
+      "REST APIs"
+    ],
+    "practices": [
+      "Unit testing",
+      "Agile teamwork",
+      "API design",
+      "Responsive UI"
+    ]
+  },
+  "projects": [
+    {
+      "name": "Job Application Tracker",
+      "dates": "2025",
+      "technologies": [
+        "Python",
+        "Streamlit",
+        "SQLite",
+        "OpenAI API"
+      ],
+      "link": "https://github.com/aishakhan/job-tracker",
+      "bullets": [
+        "Built a Streamlit app that stores job applications in SQLite and generates tailored application drafts from job descriptions.",
+        "Designed prompts that require model outputs to cite profile facts before generating CV bullets.",
+        "Added status tracking, exportable notes, and review checkpoints to prevent accidental submission."
+      ]
+    },
+    {
+      "name": "Campus Marketplace",
+      "dates": "2024",
+      "technologies": [
+        "React",
+        "Node.js",
+        "Express",
+        "MongoDB"
+      ],
+      "link": "https://github.com/aishakhan/campus-marketplace",
+      "bullets": [
+        "Created a full-stack marketplace for students to list, search, and message about campus items.",
+        "Implemented REST API endpoints for listings, authentication, and saved items.",
+        "Built responsive React views with form validation and reusable components."
+      ]
+    },
+    {
+      "name": "Student Result Analytics",
+      "dates": "2024",
+      "technologies": [
+        "Python",
+        "Pandas",
+        "Matplotlib",
+        "SQL"
+      ],
+      "link": "https://github.com/aishakhan/result-analytics",
+      "bullets": [
+        "Analyzed anonymized student performance data and generated visual reports for course-level trends.",
+        "Wrote SQL queries to clean, aggregate, and compare assessment data.",
+        "Packaged recurring analysis steps into reusable Python functions."
+      ]
+    }
+  ],
+  "experience": [],
+  "certifications": [],
+  "awards": [],
+  "application_preferences": {
+    "target_roles": [
+      "Junior Software Engineer",
+      "Graduate Software Engineer",
+      "Backend Developer",
+      "Full Stack Developer"
+    ],
+    "preferred_locations": [
+      "Remote",
+      "Karachi",
+      "Lahore",
+      "Islamabad"
+    ],
+    "availability": "Not specified",
+    "salary_expectations": "Not specified"
+  },
+  "truthfulness_constraints": [
+    "Do not mention internships unless added to experience.",
+    "Do not mention GPA because it is not specified.",
+    "Do not claim certifications because certifications is empty.",
+    "Do not state work authorization or passport status unless the candidate updates those fields."
+  ]
+}
