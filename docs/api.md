@@ -87,3 +87,21 @@ Returns metrics, breakdowns, charts, insights, and rows.
 `analytics_to_dataframes(analytics) -> dict[str, pandas.DataFrame]`
 
 Returns Streamlit-ready chart and table frames.
+
+## Guided Application Assistant
+
+`build_application_packet(profile, saved_job, model=None, export_dir=EXPORT_DIR, tracker_db_path=TRACKER_DB_PATH, chat_client=None, save_draft=True) -> ApplicationPacket`
+
+Generates tailored application materials from a saved job, exports `.tex` files, builds copy-ready fields, and optionally saves a Draft tracker row.
+
+`build_copy_fields(profile, result=None) -> dict[str, str]`
+
+Returns factual copy fields for identity, contact details, availability, relocation, English proficiency, programming tools, project evidence, AI tools, and track record. Missing values are returned as `Not specified in profile.`
+
+`apply_packet_status(packet, status_label, approved=False, tracker_db_path=TRACKER_DB_PATH) -> ApplicationPacket`
+
+Updates the tracker status for a packet. `Applied` requires `approved=True`.
+
+`saved_job_to_prompt(job) -> str`
+
+Formats a saved job into a prompt-safe job description for packet generation.

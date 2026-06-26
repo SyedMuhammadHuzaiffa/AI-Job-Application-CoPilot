@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from job_copilot.exceptions import ValidationError
-from job_copilot.tracker import list_applications, save_application
+from job_copilot.tracker import list_applications, save_application, update_application_status
 
 
 def test_tracker_saves_lists_and_indexes(tmp_path: Path) -> None:
@@ -35,6 +35,12 @@ def test_tracker_saves_lists_and_indexes(tmp_path: Path) -> None:
         indexes = {row[1] for row in conn.execute("PRAGMA index_list(applications)").fetchall()}
     assert "idx_applications_status" in indexes
     assert "idx_applications_company" in indexes
+
+    update_application_status(row_id, "Interviewing", db_path)
+    assert list_applications(db_path)[0]["status"] == "Interviewing"
+
+    with pytest.raises(ValueError):
+        update_application_status(999, "Applied", db_path)
 
 
 def test_tracker_repository_validates_inputs(tmp_path: Path) -> None:

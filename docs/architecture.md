@@ -9,6 +9,7 @@ flowchart TD
     UI --> Tailoring["Tailoring Service\nllm.py"]
     UI --> ResumeIntel["Resume Intelligence\nresume_intelligence.py"]
     UI --> Discovery["Job Discovery\njob_discovery.py"]
+    UI --> Assistant["Guided Assistant\napplication_assistant.py"]
     UI --> Analytics["Application Analytics\napplication_analytics.py"]
     UI --> Tracker["Tracker Repository\ntracker.py"]
     Tailoring --> LLMClient["OpenAI Chat Client\nllm_client.py"]
@@ -19,6 +20,8 @@ flowchart TD
     Tracker --> AppDB["SQLite\napplications.db"]
     Analytics --> AppDB
     Analytics --> JobDB
+    Assistant --> Tracker
+    Assistant --> Latex
     UI --> Latex["LaTeX Exports\nlatex.py"]
 ```
 
@@ -30,6 +33,7 @@ flowchart TD
 - `llm.py` and `resume_intelligence.py` own prompt-specific normalization and public generation APIs.
 - `tracker.py` owns application persistence through `TrackerRepository` while preserving function wrappers for compatibility.
 - `job_discovery.py` owns public-feed discovery, ranking, deduplication, saved searches, alerts, and export helpers.
+- `application_assistant.py` owns guided application packets, copy fields, status mapping, and applied-status approval enforcement.
 - `application_analytics.py` owns metrics, breakdowns, chart data, and insights.
 - `profile.py` owns profile migration, enrichment, validation, and serialization.
 
@@ -43,5 +47,6 @@ flowchart TD
 
 - OpenAI requests use configurable retries and graceful JSON-mode fallback.
 - Job source failures are logged and surfaced without stopping the whole discovery refresh.
+- The Guided Assistant opens pages and prepares fields, but never submits applications or bypasses job-site safeguards.
 - SQLite tables include indexes for tracker history, job ranking, status filters, dates, and analytics.
 - Profile migration preserves factual data and leaves missing information empty.

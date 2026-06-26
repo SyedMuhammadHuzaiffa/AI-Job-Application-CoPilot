@@ -1,10 +1,13 @@
 import copy
+import html
+import json
 import sys
 from collections import Counter
 from datetime import date
 from pathlib import Path
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 ROOT = Path(__file__).resolve().parent
 SRC = ROOT / "src"
@@ -34,6 +37,12 @@ from job_copilot.application_analytics import (
     compute_application_analytics,
     load_analytics_rows,
 )
+from job_copilot.application_assistant import (
+    ASSISTANT_STATUS_LABELS,
+    ApplicationPacket,
+    apply_packet_status,
+    build_application_packet,
+)
 from job_copilot.job_discovery import (
     JOB_STATUSES,
     SearchFilters,
@@ -50,7 +59,7 @@ from job_copilot.job_discovery import (
     search_jobs,
     set_discovered_job_status,
 )
-from job_copilot.latex import write_exports
+from job_copilot.latex import render_cover_letter_pdf_bytes, render_cv_pdf_bytes, write_exports
 from job_copilot.llm import OpenAIConfigError, generate_tailoring
 from job_copilot.logging_config import configure_logging
 from job_copilot.profile import (
@@ -741,6 +750,9 @@ def _render_job_discovery(profile: dict) -> None:
         for col, status in zip(action_cols, action_statuses):
             with col:
                 if st.button(f"Mark {status}", key=f"job_status_{selected_id}_{status}"):
+                    if status == "Applied" and not st.session_state.get(f"approve_applied_{selected_id}"):
+                        st.error("Confirm manual submission before marking Applied.")
+                        continue
                     try:
                         tracker_id = set_discovered_job_status(selected_id, status, JOB_DISCOVERY_DB_PATH)
                         message = f"Job marked {status}."
@@ -749,6 +761,14 @@ def _render_job_discovery(profile: dict) -> None:
                         st.success(message)
                     except ValueError as exc:
                         st.error(str(exc))
+        st.checkbox(
+            "I personally submitted this application before marking Applied.",
+            key=f"approve_applied_{selected_id}",
+        )
+        if selected_job.get("status") == "Saved":
+            if st.button("Prepare in Guided Assistant", key=f"prepare_assistant_{selected_id}"):
+                st.session_state["assistant_saved_job_id"] = selected_id
+                st.success("Open the Guided Assistant tab to generate the application packet.")
     else:
         st.caption("No jobs cached yet. Use Find New Jobs to refresh public feeds.")
 
@@ -839,6 +859,220 @@ def _render_analytics() -> None:
             st.dataframe(applications, hide_index=True, width="stretch")
         else:
             st.caption("No sent applications yet.")
+
+
+def _copy_button(label: str, value: str, key: str) -> None:
+    safe_label = html.escape(label)
+    button_id = f"copy_{key}".replace(" ", "_").replace(".", "_")
+    payload = json.dumps(value)
+    components.html(
+        f"""
+        <button id="{button_id}" style="
+            border: 1px solid #64748b;
+            border-radius: 6px;
+            padding: 0.38rem 0.7rem;
+            background: #0f172a;
+            color: #e5e7eb;
+            cursor: pointer;
+            font-size: 0.86rem;
+        ">Copy {safe_label}</button>
+        <script>
+        const button = document.getElementById("{button_id}");
+        button.addEventListener("click", async () => {{
+            await navigator.clipboard.writeText({payload});
+            button.textContent = "Copied";
+            setTimeout(() => button.textContent = "Copy {safe_label}", 1200);
+        }});
+        </script>
+        """,
+        height=42,
+    )
+
+
+def _render_copy_field(label: str, value: str, key: str, height: int = 76) -> None:
+    st.text_area(label, value=value, height=height, key=f"{key}_value")
+    _copy_button(label, value, key)
+
+
+def _packet_file_name(packet: ApplicationPacket, suffix: str) -> str:
+    extension = suffix.rsplit(".", 1)[-1] if "." in suffix else "pdf"
+    label = suffix.rsplit(".", 1)[0]
+    raw = f"{packet.company}-{packet.job_title}-{label}".lower()
+    slug = "".join(char if char.isalnum() else "-" for char in raw).strip("-")
+    return f"{slug or 'application'}.{extension}"
+
+
+def _render_guided_application_assistant(profile: dict, model: str) -> None:
+    st.subheader("Guided Application Assistant")
+    st.caption("Prepare a human-reviewed application packet from a saved job. This assistant opens pages and copies fields; it never submits applications.")
+
+    saved_jobs = [job for job in list_discovered_jobs(JOB_DISCOVERY_DB_PATH, limit=500) if job.get("status") == "Saved"]
+    if not saved_jobs:
+        st.info("No saved jobs yet. Save a job from Job Discovery first.")
+    else:
+        default_id = st.session_state.get("assistant_saved_job_id")
+        labels = [
+            f"#{job['id']} | {job['company']} | {job['role']} | {job.get('location', '')}"
+            for job in saved_jobs
+        ]
+        default_index = 0
+        if default_id:
+            for index, job in enumerate(saved_jobs):
+                if job["id"] == default_id:
+                    default_index = index
+                    break
+        selected_label = st.selectbox("Saved job", labels, index=default_index, key="assistant_saved_job_label")
+        selected_id = int(selected_label.split("|", 1)[0].replace("#", "").strip())
+        selected_job = next(job for job in saved_jobs if job["id"] == selected_id)
+
+        detail_cols = st.columns([0.68, 0.32], gap="large")
+        with detail_cols[0]:
+            st.markdown(f"**{selected_job['role']}** at **{selected_job['company']}**")
+            st.write(selected_job.get("location", ""))
+            st.write(selected_job.get("apply_url", ""))
+        with detail_cols[1]:
+            st.metric("Match", f"{selected_job.get('overall_match_score', 0)}/100")
+            st.metric("ATS", f"{selected_job.get('ats_match_estimate', 0)}/100")
+
+        if st.button("Generate Application Packet", type="primary", disabled=not SETTINGS.openai_api_key_present):
+            try:
+                with st.spinner("Building a truthful application packet..."):
+                    packet = build_application_packet(
+                        profile,
+                        selected_job,
+                        model=model.strip() or None,
+                        export_dir=EXPORT_DIR,
+                        tracker_db_path=TRACKER_DB_PATH,
+                    )
+                st.session_state["application_packet"] = packet.as_dict()
+                st.success("Application packet generated and saved as Draft in the tracker.")
+            except OpenAIConfigError as exc:
+                st.error(str(exc))
+            except Exception as exc:
+                st.error(f"Packet generation failed: {exc}")
+
+    packet_data = st.session_state.get("application_packet")
+    if not packet_data:
+        st.markdown("**Safety rules**")
+        _render_bullets(
+            [
+                "Never click final submit.",
+                "Never bypass CAPTCHA.",
+                "Never create fake accounts.",
+                "Never invent candidate information.",
+                "Require approval before marking Applied.",
+            ]
+        )
+        return
+
+    packet = ApplicationPacket.from_dict(packet_data)
+    st.divider()
+    st.subheader("Application Packet")
+
+    packet_cols = st.columns([0.62, 0.38], gap="large")
+    with packet_cols[0]:
+        st.markdown(f"**{packet.job_title}**")
+        st.write(packet.company)
+        st.write(packet.apply_url or "No apply URL available.")
+        st.write(f"Tailored CV path: `{packet.cv_tex_path}`")
+        st.write(f"Cover letter path: `{packet.cover_letter_tex_path}`")
+    with packet_cols[1]:
+        if packet.apply_url:
+            st.link_button("Open application page", packet.apply_url)
+        st.download_button(
+            "Download CV PDF",
+            data=render_cv_pdf_bytes(profile, packet.result),
+            file_name=_packet_file_name(packet, "cv.pdf"),
+            mime="application/pdf",
+        )
+        st.download_button(
+            "Download cover letter PDF",
+            data=render_cover_letter_pdf_bytes(
+                profile,
+                packet.result,
+                {
+                    "title": packet.job_title,
+                    "company": packet.company,
+                    "location": packet.location,
+                    "apply_link": packet.apply_url,
+                },
+            ),
+            file_name=_packet_file_name(packet, "cover-letter.pdf"),
+            mime="application/pdf",
+        )
+
+    st.markdown("**Common Application Answers**")
+    if packet.answers:
+        for index, item in enumerate(packet.answers, start=1):
+            question = item.get("question", f"Question {index}")
+            answer = item.get("answer", "")
+            _render_copy_field(question, answer, f"packet_answer_{index}", height=105)
+    else:
+        st.caption("No common answers generated.")
+
+    st.markdown("**LinkedIn Outreach Message**")
+    outreach = packet.linkedin_outreach
+    for key, label in (
+        ("connection_note", "Connection note"),
+        ("recruiter_message", "Recruiter message"),
+        ("follow_up_message", "Follow-up message"),
+    ):
+        value = outreach.get(key, "")
+        if value:
+            _render_copy_field(label, value, f"packet_outreach_{key}", height=92)
+
+    st.markdown("**Copy Field Helper**")
+    copy_tabs = st.tabs(["Identity", "Application answers", "Evidence"])
+    identity_fields = ["First name", "Last name", "Email", "Phone", "LinkedIn", "GitHub", "Location"]
+    application_fields = ["Availability", "Relocation answer", "English proficiency", "Programming tools answer", "AI tools answer"]
+    evidence_fields = ["Project answer", "Track record answer", "LinkedIn outreach message"]
+    for tab, fields in zip(copy_tabs, [identity_fields, application_fields, evidence_fields]):
+        with tab:
+            for field in fields:
+                _render_copy_field(field, packet.copy_fields.get(field, "Not specified in profile."), f"copy_{field}", height=74)
+
+    st.markdown("**Checklist**")
+    checklist_values = []
+    for index, item in enumerate(packet.checklist, start=1):
+        checklist_values.append(st.checkbox(item, key=f"packet_check_{index}"))
+    checklist_ok = bool(checklist_values) and all(checklist_values)
+
+    st.markdown("**Status Workflow**")
+    current_status = packet.status if packet.status in ASSISTANT_STATUS_LABELS else "Draft"
+    status_label = st.selectbox(
+        "Packet status",
+        ASSISTANT_STATUS_LABELS,
+        index=ASSISTANT_STATUS_LABELS.index(current_status),
+        key="packet_status_label",
+    )
+    applied_approval = st.checkbox(
+        "I personally submitted this application and approve marking it Applied.",
+        key="packet_applied_approval",
+    )
+    if st.button("Update packet status"):
+        if status_label in {"Ready to Apply", "Applied"} and not checklist_ok:
+            st.error("Complete the checklist before marking this packet Ready to Apply or Applied.")
+        elif status_label == "Applied" and not applied_approval:
+            st.error("User approval is required before marking Applied.")
+        else:
+            try:
+                updated_packet = apply_packet_status(packet, status_label, approved=applied_approval, tracker_db_path=TRACKER_DB_PATH)
+                if packet.discovered_job_id and status_label in {"Applied", "Interviewing", "Rejected", "Offer"}:
+                    set_discovered_job_status(packet.discovered_job_id, status_label, JOB_DISCOVERY_DB_PATH, also_save_tracker=False)
+                st.session_state["application_packet"] = updated_packet.as_dict()
+                st.success(f"Packet status updated to {status_label}.")
+            except ValueError as exc:
+                st.error(str(exc))
+
+    st.markdown("**Human-in-the-loop guardrails**")
+    _render_bullets(
+        [
+            "Open the application page manually.",
+            "Copy prepared fields one at a time.",
+            "Stop at CAPTCHA, login, account creation, or final submit.",
+            "Submit only after you personally review the application on the job site.",
+        ]
+    )
 
 
 def _render_settings(selected_model: str, profile_path_text: str, dark_mode: bool) -> None:
@@ -945,11 +1179,12 @@ except (ProfileError, ValueError, OSError) as exc:
 rows = list_applications(TRACKER_DB_PATH)
 result = st.session_state.get("result")
 
-apply_tab, profile_tab, discovery_tab, intelligence_tab, dashboard_tab, analytics_tab, outreach_tab, interview_tab, history_tab, settings_tab = st.tabs(
+apply_tab, profile_tab, discovery_tab, assistant_tab, intelligence_tab, dashboard_tab, analytics_tab, outreach_tab, interview_tab, history_tab, settings_tab = st.tabs(
     [
         "Apply",
         "Profile",
         "Job Discovery",
+        "Guided Assistant",
         "Resume Intelligence",
         "Dashboard",
         "Analytics",
@@ -1080,6 +1315,9 @@ with profile_tab:
 
 with discovery_tab:
     _render_job_discovery(profile)
+
+with assistant_tab:
+    _render_guided_application_assistant(profile, model)
 
 with intelligence_tab:
     _render_resume_intelligence(profile, model)

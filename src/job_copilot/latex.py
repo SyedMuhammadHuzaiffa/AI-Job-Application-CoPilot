@@ -1,4 +1,5 @@
 import re
+import textwrap
 from datetime import date, datetime
 from pathlib import Path
 from typing import Any
@@ -200,3 +201,121 @@ def write_exports(
     cover_path.write_text(render_cover_letter_tex(profile, result, job_meta), encoding="utf-8")
 
     return {"cv": cv_path, "cover_letter": cover_path}
+
+
+def render_cv_pdf_bytes(profile: dict[str, Any], result: dict[str, Any]) -> bytes:
+    tex = render_cv_tex(profile, result)
+    name = _personal_information(profile).get("name") or "Tailored CV"
+    return text_to_pdf_bytes(_latex_to_plain_text(tex), title=f"{name} - Tailored CV")
+
+
+def render_cover_letter_pdf_bytes(
+    profile: dict[str, Any],
+    result: dict[str, Any],
+    job_meta: dict[str, str],
+) -> bytes:
+    tex = render_cover_letter_tex(profile, result, job_meta)
+    company = job_meta.get("company") or result.get("job", {}).get("company") or "Company"
+    return text_to_pdf_bytes(_latex_to_plain_text(tex), title=f"Cover Letter - {company}")
+
+
+def text_to_pdf_bytes(text: str, title: str = "Document") -> bytes:
+    lines = [title, ""] + text.splitlines()
+    pages: list[list[str]] = [[]]
+    for line in lines:
+        wrapped = textwrap.wrap(line, width=92) or [""]
+        for wrapped_line in wrapped:
+            if len(pages[-1]) >= 48:
+                pages.append([])
+            pages[-1].append(wrapped_line)
+
+    objects: list[bytes] = [
+        b"<< /Type /Catalog /Pages 2 0 R >>",
+        None,  # type: ignore[list-item]
+        b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+    ]
+    page_ids: list[int] = []
+    for page_lines in pages:
+        content = _pdf_page_content(page_lines)
+        content_id = len(objects) + 1
+        objects.append(
+            b"<< /Length "
+            + str(len(content)).encode("ascii")
+            + b" >>\nstream\n"
+            + content
+            + b"\nendstream"
+        )
+        page_id = len(objects) + 1
+        page_ids.append(page_id)
+        objects.append(
+            f"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R >> >> /Contents {content_id} 0 R >>".encode(
+                "ascii"
+            )
+        )
+
+    kids = " ".join(f"{page_id} 0 R" for page_id in page_ids)
+    objects[1] = f"<< /Type /Pages /Kids [{kids}] /Count {len(page_ids)} >>".encode("ascii")
+
+    pdf = bytearray(b"%PDF-1.4\n")
+    offsets = [0]
+    for index, obj in enumerate(objects, start=1):
+        offsets.append(len(pdf))
+        pdf.extend(f"{index} 0 obj\n".encode("ascii"))
+        pdf.extend(obj)
+        pdf.extend(b"\nendobj\n")
+
+    xref_offset = len(pdf)
+    pdf.extend(f"xref\n0 {len(objects) + 1}\n".encode("ascii"))
+    pdf.extend(b"0000000000 65535 f \n")
+    for offset in offsets[1:]:
+        pdf.extend(f"{offset:010d} 00000 n \n".encode("ascii"))
+    pdf.extend(
+        f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref_offset}\n%%EOF\n".encode(
+            "latin-1", "replace"
+        )
+    )
+    return bytes(pdf)
+
+
+def _latex_to_plain_text(tex: str) -> str:
+    text = tex
+    text = re.sub(r"%.*", "", text)
+    replacements = {
+        r"\&": "&",
+        r"\%": "%",
+        r"\$": "$",
+        r"\#": "#",
+        r"\_": "_",
+        r"\{": "{",
+        r"\}": "}",
+        r"\textbackslash{}": "\\",
+        r"\textasciitilde{}": "~",
+        r"\textasciicircum{}": "^",
+        r"\mid": "|",
+    }
+    for source, target in replacements.items():
+        text = text.replace(source, target)
+    text = re.sub(r"\\(?:documentclass|usepackage)(?:\[[^\]]*\])?\{[^}]*\}", "", text)
+    text = re.sub(r"\\(?:begin|end)\{[^}]*\}", "\n", text)
+    text = re.sub(r"\\(?:section|subsection|textbf)\{([^}]*)\}", r"\1", text)
+    text = re.sub(r"\\item\s*", "- ", text)
+    text = re.sub(r"\\\\", "\n", text)
+    text = re.sub(r"\\[a-zA-Z]+\*?(?:\[[^\]]*\])?(?:\{[^}]*\})?", "", text)
+    text = re.sub(r"[{}]", "", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return "\n".join(line.strip() for line in text.splitlines() if line.strip())
+
+
+def _pdf_page_content(lines: list[str]) -> bytes:
+    commands = ["BT", "/F1 10 Tf", "14 TL", "50 760 Td"]
+    for index, line in enumerate(lines):
+        if index:
+            commands.append("T*")
+        commands.append(f"({_pdf_escape(line)}) Tj")
+    commands.append("ET")
+    return "\n".join(commands).encode("latin-1", "replace")
+
+
+def _pdf_escape(text: str) -> str:
+    sanitized = text.encode("latin-1", "replace").decode("latin-1")
+    return sanitized.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")

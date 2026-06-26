@@ -141,6 +141,21 @@ class TrackerRepository:
             ).fetchall()
         return [self._record_from_row(dict(row)) for row in rows]
 
+    def update_status(self, application_id: int, status: str) -> None:
+        if status not in STATUSES:
+            raise ValueError(f"Unsupported status: {status}")
+        self.init()
+        now = now_iso()
+        with closing(sqlite3.connect(self.db_path)) as conn:
+            cursor = conn.execute(
+                "UPDATE applications SET status = ?, updated_at = ? WHERE id = ?",
+                (status, now, application_id),
+            )
+            conn.commit()
+        if cursor.rowcount == 0:
+            raise ValueError("Application not found.")
+        logger.info("Updated application row id=%s status=%s", application_id, status)
+
     def _create_indexes(self, conn: sqlite3.Connection) -> None:
         conn.execute("CREATE INDEX IF NOT EXISTS idx_applications_status ON applications(status)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_applications_company ON applications(company)")
@@ -204,3 +219,11 @@ def save_application(
 
 def list_applications(db_path: Path = TRACKER_DB_PATH) -> list[dict[str, Any]]:
     return [record.as_dict() for record in TrackerRepository(db_path).list()]
+
+
+def update_application_status(
+    application_id: int,
+    status: str,
+    db_path: Path = TRACKER_DB_PATH,
+) -> None:
+    TrackerRepository(db_path).update_status(application_id, status)

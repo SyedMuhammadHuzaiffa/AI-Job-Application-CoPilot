@@ -16,6 +16,25 @@ Use filters to find junior, graduate, internship, remote, UAE, Pakistan, and spo
 
 Save jobs or mark them Applied, Interviewing, Rejected, or Offer. Marking a discovered job can import it into the tracker.
 
+Marking a job `Applied` requires confirming that you personally submitted it.
+
+## Guided Assistant Tab
+
+Use the `Guided Assistant` tab after saving a job from Job Discovery.
+
+The assistant creates an application packet with:
+
+- tailored CV and cover letter paths
+- downloadable CV and cover letter PDFs
+- common application answers
+- LinkedIn outreach messages
+- copy buttons for profile fields and prepared answers
+- a safety checklist
+
+Use `Open application page` to open the job site. Copy prepared fields manually. Stop at login, account creation, CAPTCHA, or final submit unless you personally decide to continue on the job site.
+
+The assistant does not mass-apply, auto-submit, create fake accounts, or invent missing profile facts. `Applied` status requires your explicit confirmation.
+
 ## Resume Intelligence Tab
 
 Paste a job description and review or replace the profile-derived CV text. The engine scores match quality, finds keyword gaps, ranks projects, suggests skill focus, rewrites the summary truthfully, and recommends whether to apply.

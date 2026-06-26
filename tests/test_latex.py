@@ -1,6 +1,13 @@
 from pathlib import Path
 
-from job_copilot.latex import latex_escape, render_cover_letter_tex, render_cv_tex, write_exports
+from job_copilot.latex import (
+    latex_escape,
+    render_cover_letter_pdf_bytes,
+    render_cover_letter_tex,
+    render_cv_pdf_bytes,
+    render_cv_tex,
+    write_exports,
+)
 from job_copilot.profile import enhance_profile
 
 
@@ -31,3 +38,5 @@ def test_latex_rendering_and_exports(tmp_path: Path) -> None:
     paths = write_exports(profile, result, {"company": "Acme", "title": "Engineer"}, tmp_path)
     assert paths["cv"].exists()
     assert paths["cover_letter"].exists()
+    assert render_cv_pdf_bytes(profile, result).startswith(b"%PDF")
+    assert render_cover_letter_pdf_bytes(profile, result, {"company": "Acme", "title": "Engineer"}).startswith(b"%PDF")

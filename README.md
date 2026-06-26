@@ -40,7 +40,15 @@ The codebase is organized as a production-ready local app: typed settings, servi
 - Save searches and show local job alerts when newly cached jobs match.
 - Export discovered jobs as CSV, Excel, or JSON.
 - Send discovered jobs to the application tracker as Saved, Applied, Interviewing, Rejected, or Offer.
+- Generate a Guided Application Assistant packet from a saved job:
+  - tailored CV and cover letter
+  - common application answers
+  - LinkedIn outreach messages
+  - copy-ready profile/application fields
+  - CV and cover letter PDF downloads
+  - human approval checklist
 - Require human approval before marking an application `Ready to Apply`.
+- Require explicit manual-submission approval before marking an application `Applied`.
 
 ## Project Structure
 
@@ -72,6 +80,7 @@ The codebase is organized as a production-ready local app: typed settings, servi
     └── job_copilot/
         ├── __init__.py
         ├── application_analytics.py
+        ├── application_assistant.py
         ├── cache.py
         ├── config.py
         ├── exceptions.py
@@ -271,6 +280,36 @@ When tracker rows came from Job Discovery, analytics enriches them with source, 
 
 Insights highlight which sources perform best, which roles produce interviews, and whether higher ATS scores are correlating with interviews. Treat the correlation note as directional until you have enough tracked applications for a reliable pattern.
 
+## Guided Application Assistant
+
+Use the `Guided Assistant` tab after saving a job from `Job Discovery`.
+
+The assistant generates an application packet with:
+
+- job title, company, location, and apply URL
+- tailored CV `.tex` path
+- cover letter `.tex` path
+- downloadable CV PDF
+- downloadable cover letter PDF
+- common application answers
+- LinkedIn outreach messages
+- copy-ready field helpers for contact details, availability, relocation, tools, projects, AI tools, and track record
+- human review checklist
+
+The workflow is intentionally human-in-the-loop. The app can open the application page and help copy prepared fields, but it does not submit applications, bypass CAPTCHA, create accounts, or invent missing candidate information.
+
+Status workflow:
+
+- `Draft`
+- `Ready to Apply`
+- `Applied`
+- `Awaiting Response`
+- `Interviewing`
+- `Rejected`
+- `Offer`
+
+Marking `Applied` requires confirmation that you personally submitted the application.
+
 ## LaTeX Exports
 
 Exported files are written to `exports/`. You can compile them with any LaTeX distribution, for example:
@@ -301,6 +340,9 @@ Use `Needs Review` or `Draft` while editing. Use `Applied`, `Awaiting response`,
 
 - No invented internships, GPA, certifications, passport status, or work authorization.
 - No auto-submission.
+- No blind mass-applying.
+- No CAPTCHA bypassing or fake account creation.
 - Concise professional outputs.
 - ATS keyword optimization only where truthful.
 - Human approval before final readiness.
+- Explicit manual-submission approval before marking an application `Applied`.
